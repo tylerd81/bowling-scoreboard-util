@@ -70,7 +70,6 @@ class BowlingScoreBoard {
 
         case BowlingScoreBoard.FrameTypes.BONUS:
           // don't add the bonus roll in
-
           currFrame.score = 0;
           break;
       }
@@ -108,26 +107,3 @@ class BowlingScoreBoard {
 module.exports = {
   BowlingScoreBoard
 };
-
-// let scoreBoard = new BowlingScoreBoard();
-
-// let newFrames = [{
-//     type: BowlingScoreBoard.FrameTypes.STRIKE,
-//     rolls: [10],
-//   },
-//   {
-//     type: BowlingScoreBoard.FrameTypes.OPEN,
-//     rolls: [7],
-//   },
-//   {
-//     type: BowlingScoreBoard.FrameTypes.OPEN,
-//     rolls: [7, 1],
-//   }
-// ];
-
-// scoreBoard.addFrame(newFrames[0], 0);
-// scoreBoard.displayFrames();
-// scoreBoard.addFrame(newFrames[1], 1);
-// scoreBoard.displayFrames();
-// scoreBoard.addFrame(newFrames[2], 1);
-// scoreBoard.displayFrames();

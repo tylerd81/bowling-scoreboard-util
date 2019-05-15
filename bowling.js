@@ -2,6 +2,7 @@ const _FrameTypes = {
   OPEN: "open",
   STRIKE: "strike",
   SPARE: "spare",
+  BONUS: "bonus"
 };
 
 class BowlingScoreBoard {
@@ -65,6 +66,12 @@ class BowlingScoreBoard {
 
         case BowlingScoreBoard.FrameTypes.OPEN:
           currFrame.score = currFrame.rolls.reduce((total, score) => total + score);
+          break;
+
+        case BowlingScoreBoard.FrameTypes.BONUS:
+          // don't add the bonus roll in
+
+          currFrame.score = 0;
           break;
       }
     }

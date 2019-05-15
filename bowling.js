@@ -17,59 +17,55 @@ class BowlingScoreBoard {
     this.frames.splice(currentFrameNum, 1, frame); // will replace frame each time
 
     for (let frameNum = 0; frameNum < this.frames.length; frameNum++) {
-      if (this.frames[frameNum].type === BowlingScoreBoard.FrameTypes.STRIKE && frameNum + 1 < this.frames.length) {
-        // if it is a strike we add the next two rolls (if they exist) to the score for this frame
-        let nextFrame = this.frames[frameNum + 1];
-        let currScore = 10; // value of a strike
+      let currFrame = this.frames[frameNum];
+      let currScore = 0;
+      let rolls = [];
+      let nextFrame = null;
 
-        // check for 10th frame and bonus rolls
-        if (frameNum === 9) {
-          console.log("will never happen");
-          // if on the 10th frame and we have a strike, just add up all the rolls
-          let rolls = this.frames[frameNum].rolls;
-          this.frames[frameNum].score = rolls.reduce((total, roll) => total + roll);
-        } else {
-          // get value of next two rolls
-          if (nextFrame.rolls.length === 2) {
-            currScore += nextFrame.rolls[0] + nextFrame.rolls[1];
-          } else {
-            // only one roll on this frame
-            currScore += nextFrame.rolls[0];
+      switch (this.frames[frameNum].type) {
+        case BowlingScoreBoard.FrameTypes.STRIKE:
+          currScore = 10;
 
-            // check if there is a next frame
-            if (frameNum + 2 < this.frames.length) {
-              let secondRoll = this.frames[frameNum + 2].rolls;
-              if (secondRoll.length !== 0) {
-                currScore += secondRoll[0];
+          // need values of next 2 rolls if they exist
+          if (frameNum + 1 < this.frames.length) {
+            nextFrame = this.frames[frameNum + 1];
+            rolls = nextFrame.rolls;
+            if (nextFrame.type === BowlingScoreBoard.FrameTypes.STRIKE) {
+              currScore += 10;
+              //check for next frame again
+              if (frameNum + 2 < this.frames.length) {
+                let nextNextFrame = this.frames[frameNum + 2];
+                let rolls = nextNextFrame.rolls;
+                if (rolls.length !== 0) {
+                  currScore += rolls[0];
+                }
               }
+              currFrame.score = currScore;
+            } else {
+              currScore += rolls.reduce((total, score) => total + score);
+              currFrame.score = currScore;
+            }
+          } else {
+            currFrame.score = currScore;
+          }
+          break;
+
+        case BowlingScoreBoard.FrameTypes.SPARE:
+          currScore = 10;
+          // check for value of next roll if any
+          if (frameNum + 1 < this.frames.length) {
+            nextFrame = this.frames[frameNum + 1];
+            rolls = nextFrame.rolls;
+            if (rolls.length !== 0) {
+              currScore += rolls[0];
             }
           }
-          this.frames[frameNum].score = currScore;
-        }
-      } else if (this.frames[frameNum].type === BowlingScoreBoard.FrameTypes.SPARE && frameNum + 1 < this.frames.length) {
-        let currFrame = this.frames[frameNum];
+          currFrame.score = currScore;
+          break;
 
-        if (currFrame.rolls.length !== 2) {
-          console.error(`Got a spare but ${currFrame.rolls.length} rolls!`);
-          return;
-        }
-
-        let currScore = currFrame.rolls[0] + currFrame.rolls[1];
-
-        // if it is a spare we add the next ONE roll
-
-        if (frameNum + 1 < this.frames.length) {
-          let rolls = this.frames[frameNum + 1].rolls;
-          if (rolls.length !== 0) {
-            currScore += rolls[0];
-          }
-
-        }
-
-        this.frames[frameNum].score = currScore;
-      } else {
-        // otherwise just add up the rolls for this frame to get the score
-        this.frames[frameNum].score = this.frames[frameNum].rolls.reduce((acc, n) => acc + n);
+        case BowlingScoreBoard.FrameTypes.OPEN:
+          currFrame.score = currFrame.rolls.reduce((total, score) => total + score);
+          break;
       }
     }
   }

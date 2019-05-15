@@ -58,13 +58,23 @@ test("Check for a perfect game", () => {
       type: BowlingScoreBoard.FrameTypes.STRIKE,
       rolls: [10]
     }, i);
-    if (i === 9) {
-      scoreBoard.addFrame({
-        type: BowlingScoreBoard.FrameTypes.STRIKE,
-        rolls: [10, 10, 10]
-      }, i);
-    }
   }
+  scoreBoard.addFrame({
+    type: BowlingScoreBoard.FrameTypes.STRIKE,
+    rolls: [10]
+  }, 10);
 
   expect(scoreBoard.totalScore()).toBe(300);
+});
+
+test("A single strike should have a score of 10", () => {
+  let scoreBoard = new BowlingScoreBoard();
+
+  let newFrame = {
+    type: BowlingScoreBoard.FrameTypes.STRIKE,
+    rolls: [10],
+  };
+
+  scoreBoard.addFrame(newFrame, 0);
+  expect(scoreBoard.totalScore()).toBe(10);
 });
